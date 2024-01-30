@@ -1,10 +1,11 @@
 void CompareHSEvent(){
 
-     int runN = 3848;
+     int runN = 3996;
 //     TString rootpath = "/net/cdaq/cdaql2data/cdaq/hallc-online-nps2023/ROOTfiles/COIN/PRODUCTION/";
      TString rootpath = "/net/cdaq/cdaql2data/cdaq/hallc-online-nps2023/ROOTfiles/NPS/SCALERS/";
 
-     TString filename = rootpath + Form("nps_replay_scalers_%d_1_-1.root",runN);
+     //TString filename = rootpath + Form("nps_replay_scalers_%d_1_-1.root",runN);
+     TString filename = rootpath + Form("nps_replay_scalers_%d_1_50000.root",runN);
      TChain *T = new TChain("TSH");
      T->Add(filename);
       
@@ -131,6 +132,8 @@ void CompareHSEvent(){
      Double_t pre_BCM1,pre_BCM2,pre_BCM4A,pre_BCM4B,pre_BCM4C,pre_Unser;
      Double_t pre_hL1ACCP,pre_EDTM,pre_c1MHz,pre_c1MHz_CP,pre_EDTM_CP,pre_hTREF1;
 
+     Double_t DIFF=pow(2,31);
+
      for(int ii=0; ii<(nentries-1); ii++){
          T->GetEntry(ii);
 
@@ -138,130 +141,132 @@ void CompareHSEvent(){
 	 if(ii>0){
 
             delta = c1MHz - pre_c1MHz;
-	    if(delta==0){
+	    Double_t delta_clock = delta;
+	    if(delta<10 || delta>DIFF){
 	       printf("Event %d: 1MHz diff=%f\n",ii,delta);
+	    }
 
                for(int jj=0; jj<16; jj++){
                    delta = hodo_1x_p[jj] - pre_hodo_1x_p[jj];
-	           if(delta!=0) printf("Event %d: hodo 1x %d pos diff=%f\n",ii,jj,delta);
+	           if(delta==0 || delta_clock==0 || delta>DIFF) printf("Event %d: hodo 1x %d pos diff=%f\n",ii,jj,delta);
                    delta = hodo_2x_p[jj] - pre_hodo_2x_p[jj];
-	           if(delta!=0) printf("Event %d: hodo 2x %d pos diff=%f\n",ii,jj,delta);
+	           if(delta==0 || delta_clock==0 || delta>DIFF) printf("Event %d: hodo 2x %d pos diff=%f\n",ii,jj,delta);
 
                    delta = hodo_1x_n[jj] - pre_hodo_1x_n[jj];
-	           if(delta!=0) printf("Event %d: hodo 1x %d neg diff=%f\n",ii,jj,delta);
+	           if(delta==0 || delta_clock==0 || delta>DIFF) printf("Event %d: hodo 1x %d neg diff=%f\n",ii,jj,delta);
                    delta = hodo_2x_n[jj] - pre_hodo_2x_n[jj];
-	           if(delta!=0) printf("Event %d: hodo 2x %d neg diff=%f\n",ii,jj,delta);
+	           if(delta==0 || delta_clock==0 || delta>DIFF) printf("Event %d: hodo 2x %d neg diff=%f\n",ii,jj,delta);
 	       }
 
                for(int jj=0; jj<10; jj++){
                    delta = hodo_1y_p[jj] - pre_hodo_1y_p[jj];
-	           if(delta!=0) printf("Event %d: hodo 1y %d pos diff=%f\n",ii,jj,delta);
+	           if(delta==0 || delta_clock==0 || delta>DIFF) printf("Event %d: hodo 1y %d pos diff=%f\n",ii,jj,delta);
                    delta = hodo_2y_p[jj] - pre_hodo_2y_p[jj];
-	           if(delta!=0) printf("Event %d: hodo 2y %d pos diff=%f\n",ii,jj,delta);
+	           if(delta==0 || delta_clock==0 || delta>DIFF) printf("Event %d: hodo 2y %d pos diff=%f\n",ii,jj,delta);
 
                    delta = hodo_1y_n[jj] - pre_hodo_1y_n[jj];
-	           if(delta!=0) printf("Event %d: hodo 1y %d neg diff=%f\n",ii,jj,delta);
+	           if(delta==0 || delta_clock==0 || delta>DIFF) printf("Event %d: hodo 1y %d neg diff=%f\n",ii,jj,delta);
                    delta = hodo_2y_n[jj] - pre_hodo_2y_n[jj];
-	           if(delta!=0) printf("Event %d: hodo 2y %d neg diff=%f\n",ii,jj,delta);
+	           if(delta==0 || delta_clock==0 || delta>DIFF) printf("Event %d: hodo 2y %d neg diff=%f\n",ii,jj,delta);
 	       }
 
                delta = S2X - pre_S2X;
-	       if(delta!=0) printf("Event %d: S2X diff=%f\n",ii,delta);
+	       if(delta==0 || delta_clock==0 || delta>DIFF) printf("Event %d: S2X diff=%f\n",ii,delta);
                delta = S2Y - pre_S2Y;
-	       if(delta!=0) printf("Event %d: S2Y diff=%f\n",ii,delta);
+	       if(delta==0 || delta_clock==0 || delta>DIFF) printf("Event %d: S2Y diff=%f\n",ii,delta);
 
                delta = S1X - pre_S1X;
-	       if(delta!=0) printf("Event %d: S1X diff=%f\n",ii,delta);
+	       if(delta==0 || delta_clock==0 || delta>DIFF) printf("Event %d: S1X diff=%f\n",ii,delta);
                delta = S1Y - pre_S1Y;
-	       if(delta!=0) printf("Event %d: S1Y diff=%f\n",ii,delta);
+	       if(delta==0 || delta_clock==0 || delta>DIFF) printf("Event %d: S1Y diff=%f\n",ii,delta);
 
                delta = S1XS1Y - pre_S1XS1Y;
-	       if(delta!=0) printf("Event %d: S1XS1Y diff=%f\n",ii,delta);
+	       if(delta==0 || delta_clock==0 || delta>DIFF) printf("Event %d: S1XS1Y diff=%f\n",ii,delta);
                 
                delta = S2XS2Y - pre_S2XS2Y;
-	       if(delta!=0) printf("Event %d: S2XS2Y diff=%f\n",ii,delta);
+	       if(delta==0 || delta_clock==0 || delta>DIFF) printf("Event %d: S2XS2Y diff=%f\n",ii,delta);
 
                delta = CER - pre_CER;
-	       if(delta!=0) printf("Event %d: CER diff=%f\n",ii,delta);
+	       if(delta==0 || delta_clock==0 || delta>DIFF) printf("Event %d: CER diff=%f\n",ii,delta);
 
                delta = PRHI - pre_PRHI;
-	       if(delta!=0) printf("Event %d: PRHI diff=%f\n",ii,delta);
+	       if(delta==0 || delta_clock==0 || delta>DIFF) printf("Event %d: PRHI diff=%f\n",ii,delta);
                delta = PRLO - pre_PRLO;
-	       if(delta!=0) printf("Event %d: PRLO diff=%f\n",ii,delta);
+	       if(delta==0 || delta_clock==0 || delta>DIFF) printf("Event %d: PRLO diff=%f\n",ii,delta);
                delta = hPRE40 - pre_hPRE40;
-	       if(delta!=0) printf("Event %d: hPRE40 diff=%f\n",ii,delta);
+	       if(delta==0 || delta_clock==0 || delta>DIFF) printf("Event %d: hPRE40 diff=%f\n",ii,delta);
                delta = hPRE100 - pre_hPRE100;
-	       if(delta!=0) printf("Event %d: hPRE100 diff=%f\n",ii,delta);
+	       if(delta==0 || delta_clock==0 || delta>DIFF) printf("Event %d: hPRE100 diff=%f\n",ii,delta);
                delta = hPRE150 - pre_hPRE150;
-	       if(delta!=0) printf("Event %d: hPRE150 diff=%f\n",ii,delta);
+	       if(delta==0 || delta_clock==0 || delta>DIFF) printf("Event %d: hPRE150 diff=%f\n",ii,delta);
                delta = hPRE200 - pre_hPRE200;
-	       if(delta!=0) printf("Event %d: hPRE200 diff=%f\n",ii,delta);
+	       if(delta==0 || delta_clock==0 || delta>DIFF) printf("Event %d: hPRE200 diff=%f\n",ii,delta);
 
                delta = SHLO - pre_SHLO;
-	       if(delta!=0) printf("Event %d: SHLO diff=%f\n",ii,delta);
+	       if(delta==0 || delta_clock==0 || delta>DIFF) printf("Event %d: SHLO diff=%f\n",ii,delta);
                delta = ASUM - pre_ASUM;
 	       /*
-	       if(delta!=0) printf("Event %d: ASUM diff=%f\n",ii,delta);
+	       if(delta==0 || delta_clock==0 || delta>DIFF) printf("Event %d: ASUM diff=%f\n",ii,delta);
                delta = BSUM - pre_BSUM;
-	       if(delta!=0) printf("Event %d: BSUM diff=%f\n",ii,delta);
+	       if(delta==0 || delta_clock==0 || delta>DIFF) printf("Event %d: BSUM diff=%f\n",ii,delta);
                delta = CSUM - pre_CSUM;
-	       if(delta!=0) printf("Event %d: CSUM diff=%f\n",ii,delta);
+	       if(delta==0 || delta_clock==0 || delta>DIFF) printf("Event %d: CSUM diff=%f\n",ii,delta);
                delta = DSUM - pre_DSUM;
-	       if(delta!=0) printf("Event %d: DSUM diff=%f\n",ii,delta);
+	       if(delta==0 || delta_clock==0 || delta>DIFF) printf("Event %d: DSUM diff=%f\n",ii,delta);
 */
                delta = hEL_LO_LO - pre_hEL_LO_LO;
-	       if(delta!=0) printf("Event %d: hEL_LO_LO diff=%f\n",ii,delta);
+	       if(delta==0 || delta_clock==0 || delta>DIFF) printf("Event %d: hEL_LO_LO diff=%f\n",ii,delta);
                delta = hEL_LO - pre_hEL_LO;
-	       if(delta!=0) printf("Event %d: hEL_LO diff=%f\n",ii,delta);
+	       if(delta==0 || delta_clock==0 || delta>DIFF) printf("Event %d: hEL_LO diff=%f\n",ii,delta);
                delta = hEL_HI - pre_hEL_HI;
-	       if(delta!=0) printf("Event %d: hEL_HI diff=%f\n",ii,delta);
+	       if(delta==0 || delta_clock==0 || delta>DIFF) printf("Event %d: hEL_HI diff=%f\n",ii,delta);
                delta = hEL_REAL - pre_hEL_REAL;
-	       if(delta!=0) printf("Event %d: hEL_REAL diff=%f\n",ii,delta);
+	       if(delta==0 || delta_clock==0 || delta>DIFF) printf("Event %d: hEL_REAL diff=%f\n",ii,delta);
                delta = hEL_CLEAN - pre_hEL_CLEAN;
-	       if(delta!=0) printf("Event %d: hEL_CLEAN diff=%f\n",ii,delta);
+	       if(delta==0 || delta_clock==0 || delta>DIFF) printf("Event %d: hEL_CLEAN diff=%f\n",ii,delta);
                delta = hSTOF - pre_hSTOF;
-	       if(delta!=0) printf("Event %d: hSTOF diff=%f\n",ii,delta);
+	       if(delta==0 || delta_clock==0 || delta>DIFF) printf("Event %d: hSTOF diff=%f\n",ii,delta);
 
                delta = hTRIG1 - pre_hTRIG1;
-	       if(delta!=0) printf("Event %d: hTRIG1 diff=%f\n",ii,delta);
+	       if(delta==0 || delta_clock==0 || delta>DIFF) printf("Event %d: hTRIG1 diff=%f\n",ii,delta);
 /*	       
                delta = hTRIG2 - pre_hTRIG2;
-	       if(delta!=0) printf("Event %d: hTRIG2 diff=%f\n",ii,delta);
+	       if(delta==0 || delta_clock==0 || delta>DIFF) printf("Event %d: hTRIG2 diff=%f\n",ii,delta);
 */
 
                delta = hTRIG3 - pre_hTRIG3;
-	       if(delta!=0) printf("Event %d: hTRIG3 diff=%f\n",ii,delta);
+	       if(delta==0 || delta_clock==0 || delta>DIFF) printf("Event %d: hTRIG3 diff=%f\n",ii,delta);
                delta = hTRIG4 - pre_hTRIG4;
-	       if(delta!=0) printf("Event %d: hTRIG4 diff=%f\n",ii,delta);
+	       if(delta==0 || delta_clock==0 || delta>DIFF) printf("Event %d: hTRIG4 diff=%f\n",ii,delta);
                delta = hTRIG5 - pre_hTRIG5;
-	       if(delta!=0) printf("Event %d: hTRIG5 diff=%f\n",ii,delta);
+	       if(delta==0 || delta_clock==0 || delta>DIFF) printf("Event %d: hTRIG5 diff=%f\n",ii,delta);
                delta = hTRIG6 - pre_hTRIG6;
-	       if(delta!=0) printf("Event %d: hTRIG6 diff=%f\n",ii,delta);
+	       if(delta==0 || delta_clock==0 || delta>DIFF) printf("Event %d: hTRIG6 diff=%f\n",ii,delta);
 
                delta = BCM1 - pre_BCM1;
-	       if(delta!=0) printf("Event %d: BCM1 diff=%f\n",ii,delta);
+	       if(delta==0 || delta_clock==0 || delta>DIFF) printf("Event %d: BCM1 diff=%f\n",ii,delta);
                delta = BCM2 - pre_BCM2;
-	       if(delta!=0) printf("Event %d: BCM2 diff=%f\n",ii,delta);
+	       if(delta==0 || delta_clock==0 || delta>DIFF) printf("Event %d: BCM2 diff=%f\n",ii,delta);
                delta = BCM4A - pre_BCM4A;
-	       if(delta!=0) printf("Event %d: BCM4A diff=%f\n",ii,delta);
+	       if(delta==0 || delta_clock==0 || delta>DIFF) printf("Event %d: BCM4A diff=%f\n",ii,delta);
                delta = BCM4B - pre_BCM4B;
-	       if(delta!=0) printf("Event %d: BCM4B diff=%f\n",ii,delta);
+	       if(delta==0 || delta_clock==0 || delta>DIFF) printf("Event %d: BCM4B diff=%f\n",ii,delta);
                delta = BCM4C - pre_BCM4C;
-	       if(delta!=0) printf("Event %d: BCM4C diff=%f\n",ii,delta);
+	       if(delta==0 || delta_clock==0 || delta>DIFF) printf("Event %d: BCM4C diff=%f\n",ii,delta);
                delta = Unser - pre_Unser;
-	       if(delta!=0) printf("Event %d: Unser diff=%f\n",ii,delta);
+	       if(delta==0 || delta_clock==0 || delta>DIFF) printf("Event %d: Unser diff=%f\n",ii,delta);
 
                delta = hL1ACCP - pre_hL1ACCP;
-	       if(delta!=0) printf("Event %d: hL1ACCP diff=%f\n",ii,delta);
+	       if(delta==0 || delta_clock==0 || delta>DIFF) printf("Event %d: hL1ACCP diff=%f\n",ii,delta);
                delta = EDTM - pre_EDTM;
-	       if(delta!=0) printf("Event %d: EDTM diff=%f\n",ii,delta);
+	       if(delta==0 || delta_clock==0 || delta>DIFF) printf("Event %d: EDTM diff=%f\n",ii,delta);
                delta = c1MHz_CP - pre_c1MHz_CP;
-	       if(delta!=0) printf("Event %d: 1MHz_CP diff=%f\n",ii,delta);
+	       if(delta==0 || delta_clock==0 || delta>DIFF) printf("Event %d: 1MHz_CP diff=%f\n",ii,delta);
                delta = EDTM_CP - pre_EDTM_CP;
-	       if(delta!=0) printf("Event %d: EDTM_CP diff=%f\n",ii,delta);
+	       if(delta==0 || delta_clock==0 || delta>DIFF) printf("Event %d: EDTM_CP diff=%f\n",ii,delta);
                delta = hTREF1 - pre_hTREF1;
-	       if(delta!=0) printf("Event %d: hTREF1 diff=%f\n",ii,delta);
-	    }
+	       if(delta==0 || delta_clock==0 || delta>DIFF) printf("Event %d: hTREF1 diff=%f\n",ii,delta);
+//	    }
 	 }
 
          for(int jj=0; jj<16; jj++){
