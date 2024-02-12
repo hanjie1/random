@@ -1,11 +1,11 @@
 void CompareHSEvent(){
 
-     int runN = 3996;
+     int runN = 3848;
 //     TString rootpath = "/net/cdaq/cdaql2data/cdaq/hallc-online-nps2023/ROOTfiles/COIN/PRODUCTION/";
      TString rootpath = "/net/cdaq/cdaql2data/cdaq/hallc-online-nps2023/ROOTfiles/NPS/SCALERS/";
 
-     //TString filename = rootpath + Form("nps_replay_scalers_%d_1_-1.root",runN);
-     TString filename = rootpath + Form("nps_replay_scalers_%d_1_50000.root",runN);
+     TString filename = rootpath + Form("nps_replay_scalers_%d_1_-1.root",runN);
+     //TString filename = rootpath + Form("nps_replay_scalers_%d_1_50000.root",runN);
      TChain *T = new TChain("TSH");
      T->Add(filename);
       
